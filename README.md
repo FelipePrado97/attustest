@@ -287,7 +287,7 @@ docker compose --profile test run --rm frontend-test
 
 | | Backend | Front-end |
 |---|---|---|
-| Testes | **185** (JUnit 5) | **170** (Vitest) |
+| Testes | **187** (JUnit 5) | **170** (Vitest) |
 | Cobertura de linhas | 100% | 98,5% |
 | Cobertura de branches | 92,8% | 96,2% |
 | Trava no build | falha abaixo de 90% linhas / 85% branches (JaCoCo) | falha abaixo de 90% linhas / 85% branches |
@@ -301,6 +301,7 @@ docker compose --profile test run --rm frontend-test
 - **Mensageria** — relay do outbox (ordem, bloqueio por processo, backoff, broker fora), consumidor, limpeza e métricas.
 - **Integração ponta a ponta** — `@SpringBootTest` com H2 (modo PostgreSQL) e **Kafka embarcado**: HTTP → banco → outbox → Kafka → consumidor → histórico, DLT, concorrência real entre duas edições simultâneas.
 - **Arquitetura** — ArchUnit garante as fronteiras hexagonais.
+- **Schema** — toda tabela e coluna tem descrição (`COMMENT ON`) no banco; um teste impede colunas sem documentação.
 
 **Front-end**
 - Validadores, máscaras, CNJ e datas (funções puras); cliente HTTP e interceptor (`HttpTestingController`); tradução de erros; componentes das três telas com navegação real (`RouterTestingHarness`) e harnesses do Angular Material.

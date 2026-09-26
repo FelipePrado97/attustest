@@ -111,6 +111,7 @@ Publicar no Kafka dentro da transação do banco cria dois cenários ruins: o co
 - **Pirâmide:** muitos testes unitários de domínio e de casos de uso, `@WebMvcTest`/`@DataJpaTest` nas bordas e poucos testes de integração ponta a ponta.
 - **H2 em modo PostgreSQL + Kafka embarcado** nos testes de integração: rodam sem Docker e em segundos. *Trade-off:* H2 não é PostgreSQL — ver melhorias (Testcontainers).
 - **Travas de cobertura** no build (JaCoCo e Vitest): 90% de linhas e 85% de branches.
+- **Schema autodocumentado:** toda tabela e coluna tem `COMMENT ON` nas migrations — a descrição fica no catálogo do banco e aparece em qualquer ferramenta (psql, DBeaver, IDE). O `SchemaDocumentadoTest` quebra o build se uma tabela ou coluna nova ficar sem descrição.
 - **Tudo roda com Docker**, inclusive as suítes de teste (profile `test`). Imagens multi-stage, execução sem root, JRE Alpine.
 - Particularidades de ambiente tratadas: no Windows, o NIO cria sockets locais no diretório temporário do usuário e caminhos com acento quebravam o Kafka embarcado (`jdk.net.unixdomain.tmpdir` aponta para `target/`); o Vitest usa poucos workers para ser estável em containers com CPU e I/O limitados.
 
