@@ -1,0 +1,107 @@
+name: attustest
+
+services:
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: attus-postgres
+    environment:
+      POSTGRES_DB: attus
+      POSTGRES_USER: attus
+      POSTGRES_PASSWORD: attus
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U attus -d attus"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Kafka em modo KRaft (sem Zookeeper). Dois listeners: um para os containers (kafka:29092)
+  # e outro para quem roda a API fora do Docker (localhost:9092).
+  kafka:
+    image: apache/kafka:4.3.1
+    container_name: attus-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://:29092,EXTERNAL://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      # Tópicos são declarados pela aplicação (NewTopic). Desligar a criação automática
+      # faz um nome de tópico errado falhar alto em vez de criar um tópico "fantasma".
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 > /dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: attus-kafka-ui
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: attus
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+    depends_on:
+      kafka:
+        condition: service_healthy
+    profiles: ["tools"]
+
+  api:
+    build: ./backend
+    container_name: attus-api
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/attus
+      DB_USER: attus
+      DB_PASSWORD: attus
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
+  web:
+    build: ./frontend
+    container_name: attus-web
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+
+  backend-test:
+    image: eclipse-temurin:21-jdk-alpine
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+      - maven-cache:/root/.m2
+    command: ["sh", "mvnw", "-B", "verify"]
+    profiles: ["test"]
+
+  frontend-test:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: ["sh", "-c", "npm ci --no-audit --no-fund && npx ng test --watch=false --coverage"]
+    profiles: ["test"]
+
+volumes:
+  postgres-data:
+  maven-cache:

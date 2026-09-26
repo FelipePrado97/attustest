@@ -1,0 +1,19 @@
+# Perfil de teste: H2 em modo PostgreSQL (mesmas migrations do Flyway) + Kafka embarcado.
+# Nenhuma dependência externa: `./mvnw test` roda sem Docker.
+spring:
+  datasource:
+    url: jdbc:h2:mem:attus;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  kafka:
+    consumer:
+      group-id: testes
+
+app:
+  kafka:
+    particoes: 1
+    retry:
+      intervalo-inicial-ms: 50
+      max-tentativas: 2
+  outbox:
+    intervalo-ms: 200

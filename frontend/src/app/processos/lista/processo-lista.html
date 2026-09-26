@@ -1,0 +1,120 @@
+<header class="cabecalho-pagina">
+  <div>
+    <h1>Processos</h1>
+    <p class="subtitulo">Acompanhe os processos judiciais da procuradoria.</p>
+  </div>
+  <a mat-flat-button routerLink="/processos/novo">
+    <mat-icon>add</mat-icon>
+    Novo processo
+  </a>
+</header>
+
+<section class="filtros" aria-label="Filtros">
+  <mat-form-field class="campo-busca" subscriptSizing="dynamic">
+    <mat-label>Buscar</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput [formControl]="termo" placeholder="Número CNJ, assunto ou parte contrária" />
+    @if (termo.value) {
+      <button matSuffix mat-icon-button aria-label="Limpar busca" (click)="termo.setValue('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="campo-status" subscriptSizing="dynamic">
+    <mat-label>Status</mat-label>
+    <mat-select [formControl]="status">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (s of todosStatus; track s) {
+        <mat-option [value]="s">{{ rotuloStatus[s] }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</section>
+
+<div class="tabela-container">
+  @if (carregando()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando processos" />
+  }
+
+  @if (erro(); as falha) {
+    <div class="estado" role="alert">
+      <mat-icon>cloud_off</mat-icon>
+      <p>{{ falha.mensagem }}</p>
+      <button mat-stroked-button (click)="tentarNovamente()">Tentar novamente</button>
+    </div>
+  } @else if (resultado(); as pagina) {
+    @if (pagina.totalItens === 0) {
+      <div class="estado">
+        <mat-icon>inbox</mat-icon>
+        @if (filtro().termo || filtro().status) {
+          <p>Nenhum processo encontrado para os filtros informados.</p>
+          <button mat-stroked-button (click)="limparFiltros()">Limpar filtros</button>
+        } @else {
+          <p>Nenhum processo cadastrado ainda.</p>
+          <a mat-stroked-button routerLink="/processos/novo">Cadastrar o primeiro</a>
+        }
+      </div>
+    } @else {
+      <table mat-table [dataSource]="pagina.itens" class="tabela">
+        <ng-container matColumnDef="numeroCnj">
+          <th mat-header-cell *matHeaderCellDef>Número CNJ</th>
+          <td mat-cell *matCellDef="let p" class="numero">
+            <a [routerLink]="['/processos', p.id]">{{ p.numeroCnj }}</a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assunto">
+          <th mat-header-cell *matHeaderCellDef>Assunto</th>
+          <td mat-cell *matCellDef="let p" class="texto-longo" [matTooltip]="p.assunto">{{ p.assunto }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="parteContraria">
+          <th mat-header-cell *matHeaderCellDef>Parte contrária</th>
+          <td mat-cell *matCellDef="let p" class="texto-longo">{{ p.parteContraria }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="valorCausa">
+          <th mat-header-cell *matHeaderCellDef class="direita">Valor da causa</th>
+          <td mat-cell *matCellDef="let p" class="direita">{{ p.valorCausa | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let p"><app-status-chip [status]="p.status" /></td>
+        </ng-container>
+
+        <ng-container matColumnDef="atualizadoEm">
+          <th mat-header-cell *matHeaderCellDef>Atualizado em</th>
+          <td mat-cell *matCellDef="let p">{{ p.atualizadoEm | date: 'dd/MM/yyyy HH:mm' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef><span class="visualmente-oculto">Ações</span></th>
+          <td mat-cell *matCellDef="let p" class="direita">
+            <a mat-icon-button [routerLink]="['/processos', p.id]" matTooltip="Ver detalhes" [attr.aria-label]="'Ver detalhes de ' + p.numeroCnj">
+              <mat-icon>visibility</mat-icon>
+            </a>
+            @if (p.status !== 'ARQUIVADO') {
+              <a mat-icon-button [routerLink]="['/processos', p.id, 'editar']" matTooltip="Editar" [attr.aria-label]="'Editar ' + p.numeroCnj">
+                <mat-icon>edit</mat-icon>
+              </a>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+        <tr mat-row *matRowDef="let row; columns: colunas"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="pagina.totalItens"
+        [pageIndex]="pagina.pagina"
+        [pageSize]="pagina.tamanho"
+        [pageSizeOptions]="tamanhosPagina"
+        (page)="mudarPagina($event)"
+        aria-label="Paginação dos processos"
+      />
+    }
+  }
+</div>

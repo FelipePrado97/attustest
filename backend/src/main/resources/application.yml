@@ -1,0 +1,81 @@
+spring:
+  application:
+    name: processos-api
+  threads:
+    virtual:
+      enabled: true
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/attus}
+    username: ${DB_USER:attus}
+    password: ${DB_PASSWORD:attus}
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 5000
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate   # o schema é responsabilidade do Flyway
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      properties:
+        enable.idempotence: true
+        delivery.timeout.ms: 15000
+        request.timeout.ms: 5000
+        max.block.ms: 5000   # sem isso, com o broker fora, send() bloqueia 60s esperando metadados
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+
+app:
+  fuso-horario: America/Sao_Paulo
+  kafka:
+    topico-eventos: processos.eventos
+    grupo-historico: historico-processos
+    particoes: 3
+    retry:
+      intervalo-inicial-ms: 500
+      max-tentativas: 4
+  outbox:
+    intervalo-ms: 1000
+    backoff-inicial: 1s
+    backoff-maximo: 5m
+    retencao: 7d
+    limpeza-cron: "0 0 3 * * *"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  pattern:
+    # correlationId vindo do MDC em todas as linhas (HTTP, relay do outbox e consumidor Kafka)
+    level: "%5p [cid:%X{correlationId:-}]"
+  level:
+    org.apache.kafka: WARN

@@ -1,0 +1,85 @@
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+
+  --borda-suave: #e0e3e8;
+  --texto-secundario: #5f6368;
+  --fundo-pagina: #f6f8fb;
+  --perigo: #b3261e;
+  --status-ativo-bg: #e6f4ea;
+  --status-ativo-fg: #1e6b34;
+  --status-suspenso-bg: #fff4e0;
+  --status-suspenso-fg: #8a5300;
+  --status-arquivado-bg: #eceff1;
+  --status-arquivado-fg: #455a64;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--fundo-pagina);
+  color: var(--mat-sys-on-surface);
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 500;
+}
+
+.cabecalho-pagina {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.subtitulo {
+  margin: 4px 0 0;
+  color: var(--texto-secundario);
+}
+
+.cartao {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.botao-perigo {
+  --mat-button-filled-container-color: var(--perigo);
+  --mat-button-filled-label-text-color: #fff;
+}
+
+.botao-perigo-texto {
+  --mat-button-text-label-text-color: var(--perigo);
+}
+
+.notificacao-erro {
+  --mat-snack-bar-button-color: #ffb4ab;
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

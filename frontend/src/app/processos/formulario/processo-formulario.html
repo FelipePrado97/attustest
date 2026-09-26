@@ -1,0 +1,99 @@
+<header class="cabecalho-pagina">
+  <div>
+    <a mat-button routerLink="/processos" class="voltar">
+      <mat-icon>arrow_back</mat-icon>
+      Processos
+    </a>
+    <h1>{{ edicao() ? 'Editar processo' : 'Novo processo' }}</h1>
+  </div>
+</header>
+
+@if (carregando()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Carregando processo" />
+} @else if (erroCarga(); as falha) {
+  <div class="cartao estado" role="alert">
+    <p>{{ falha.mensagem }}</p>
+    @if (falha.naoEncontrado) {
+      <a mat-stroked-button routerLink="/processos">Voltar para a lista</a>
+    } @else {
+      <button mat-stroked-button (click)="recarregar()">Tentar novamente</button>
+    }
+  </div>
+} @else {
+  <form class="cartao formulario" [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+    <mat-form-field>
+      <mat-label>Número CNJ</mat-label>
+      <input
+        matInput
+        formControlName="numeroCnj"
+        [appMascara]="mascaraCnj"
+        [placeholder]="mascaraCnj"
+        inputmode="numeric"
+        autocomplete="off"
+      />
+      @if (!edicao()) {
+        <button
+          matIconSuffix
+          mat-icon-button
+          type="button"
+          (click)="gerarNumeroCnj()"
+          matTooltip="Gerar um número CNJ válido"
+          aria-label="Gerar um número CNJ válido"
+        >
+          <mat-icon>auto_fix_high</mat-icon>
+        </button>
+      }
+      <mat-hint>{{ dicaNumeroCnj() }}</mat-hint>
+      <mat-error>{{ erro('numeroCnj') }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Assunto</mat-label>
+      <input matInput formControlName="assunto" [maxlength]="limites.assunto" />
+      <mat-hint align="end">{{ form.controls.assunto.value.length }} / {{ limites.assunto }}</mat-hint>
+      <mat-error>{{ erro('assunto') }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Parte contrária</mat-label>
+      <input matInput formControlName="parteContraria" [maxlength]="limites.parteContraria" />
+      <mat-hint align="end">{{ form.controls.parteContraria.value.length }} / {{ limites.parteContraria }}</mat-hint>
+      <mat-error>{{ erro('parteContraria') }}</mat-error>
+    </mat-form-field>
+
+    <div class="linha">
+      <mat-form-field>
+        <mat-label>Valor da causa</mat-label>
+        <span matTextPrefix>R$&nbsp;</span>
+        <input matInput type="number" formControlName="valorCausa" min="0" step="0.01" inputmode="decimal" />
+        <mat-error>{{ erro('valorCausa') }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Data de distribuição</mat-label>
+        <input
+          matInput
+          [matDatepicker]="calendario"
+          [appMascara]="mascaraData"
+          formControlName="dataDistribuicao"
+          [min]="dataMinima()"
+          [max]="dataMaxima"
+          placeholder="dd/mm/aaaa"
+          inputmode="numeric"
+          autocomplete="off"
+        />
+        <mat-datepicker-toggle matIconSuffix [for]="calendario" aria-label="Abrir calendário" />
+        <mat-datepicker #calendario />
+        <mat-hint>A partir do ano de ajuizamento do número CNJ.</mat-hint>
+        <mat-error>{{ erro('dataDistribuicao') }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="acoes">
+      <a mat-button [routerLink]="edicao() ? ['/processos', id()] : ['/processos']">Cancelar</a>
+      <button mat-flat-button type="submit" [disabled]="salvando()">
+        {{ salvando() ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </div>
+  </form>
+}

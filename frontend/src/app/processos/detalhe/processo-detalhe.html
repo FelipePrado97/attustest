@@ -1,0 +1,97 @@
+<header class="cabecalho-pagina">
+  <div>
+    <a mat-button routerLink="/processos" class="voltar">
+      <mat-icon>arrow_back</mat-icon>
+      Processos
+    </a>
+    @if (processo(); as p) {
+      <h1 class="numero">{{ p.numeroCnj }}</h1>
+    } @else {
+      <h1>Processo</h1>
+    }
+  </div>
+</header>
+
+@if (carregando()) {
+  <mat-progress-bar mode="indeterminate" aria-label="Carregando processo" />
+} @else if (erroCarga(); as falha) {
+  <div class="cartao estado" role="alert">
+    <p>{{ falha.mensagem }}</p>
+    @if (falha.naoEncontrado) {
+      <a mat-stroked-button routerLink="/processos">Voltar para a lista</a>
+    } @else {
+      <button mat-stroked-button (click)="carregar()">Tentar novamente</button>
+    }
+  </div>
+} @else if (processo(); as p) {
+  <div class="grade">
+    <section class="cartao" aria-labelledby="titulo-dados">
+      <div class="cartao-cabecalho">
+        <h2 id="titulo-dados">Dados do processo</h2>
+        <app-status-chip [status]="p.status" />
+      </div>
+
+      <dl class="dados">
+        <dt>Assunto</dt>
+        <dd>{{ p.assunto }}</dd>
+        <dt>Parte contrária</dt>
+        <dd>{{ p.parteContraria }}</dd>
+        <dt>Valor da causa</dt>
+        <dd>{{ p.valorCausa | currency }}</dd>
+        <dt>Data de distribuição</dt>
+        <dd>{{ p.dataDistribuicao | date: 'dd/MM/yyyy' : 'UTC' }}</dd>
+        <dt>Cadastrado em</dt>
+        <dd>{{ p.criadoEm | date: 'dd/MM/yyyy HH:mm' }}</dd>
+        <dt>Última atualização</dt>
+        <dd>{{ p.atualizadoEm | date: 'dd/MM/yyyy HH:mm' }}</dd>
+      </dl>
+
+      <div class="acoes">
+        @if (p.status === 'ARQUIVADO') {
+          <span matTooltip="Desarquive o processo para editá-lo">
+            <button mat-stroked-button disabled>
+              <mat-icon>edit</mat-icon>
+              Editar
+            </button>
+          </span>
+        } @else {
+          <a mat-stroked-button [routerLink]="['/processos', p.id, 'editar']" [class.desabilitado]="processando()">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </a>
+        }
+        @for (destino of p.transicoesPermitidas; track destino) {
+          <button mat-stroked-button [disabled]="processando()" (click)="alterarStatus(destino)">
+            {{ rotuloAcao(p.status, destino) }}
+          </button>
+        }
+        <span class="espaco"></span>
+        <button mat-button class="botao-perigo-texto" [disabled]="processando()" (click)="excluir()">
+          <mat-icon>delete</mat-icon>
+          Excluir
+        </button>
+      </div>
+    </section>
+
+    <section class="cartao" aria-labelledby="titulo-historico">
+      <div class="cartao-cabecalho">
+        <h2 id="titulo-historico">Linha do tempo</h2>
+        <button
+          mat-icon-button
+          (click)="recarregarHistorico()"
+          matTooltip="Atualizar linha do tempo"
+          aria-label="Atualizar linha do tempo"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+      @if (atualizandoHistorico()) {
+        <p class="aviso" role="status">
+          <mat-icon inline>hourglass_top</mat-icon>
+          Registrando a alteração na linha do tempo...
+        </p>
+      }
+      <app-historico-timeline [registros]="historico()" />
+    </section>
+  </div>
+}

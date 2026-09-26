@@ -1,0 +1,67 @@
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.campo-busca {
+  flex: 1 1 360px;
+}
+
+.campo-status {
+  flex: 0 1 200px;
+}
+
+.tabela-container {
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--borda-suave);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.tabela {
+  width: 100%;
+}
+
+.numero a {
+  font-family: 'Roboto Mono', monospace;
+  color: var(--mat-sys-primary);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.texto-longo {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.direita {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  color: var(--texto-secundario);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
