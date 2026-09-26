@@ -25,7 +25,7 @@ Aplicação ponta a ponta para uma procuradoria cadastrar e acompanhar processos
 **Único pré-requisito: [Docker](https://docs.docker.com/get-docker/) com Docker Compose.** Não é preciso instalar Java, Maven, Node ou Angular CLI — tudo é compilado dentro dos containers.
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/FelipePrado97/attustest.git
 cd attustest
 docker compose up -d --build
 ```
