@@ -8,6 +8,7 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Clock;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -26,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OutboxPersistenciaTest {
 
     private static final Instant AGORA = Instant.parse("2025-06-10T15:00:00Z");
+    private static final int LIMITE_PAYLOAD_BYTES = 512 * 1024;
 
     @TestConfiguration
     static class Config {
@@ -86,6 +89,24 @@ class OutboxPersistenciaTest {
         assertThat(repository.findAll()).extracting(OutboxEventoEntity::getId)
                 .containsExactlyInAnyOrder(recente.getId(), pendente.getId())
                 .doesNotContain(antigo.getId());
+    }
+
+    @Test
+    void bancoRecusaEventoAcimaDoLimiteQueOKafkaAceita() {
+        var eventoGrandeDemais = new OutboxEventoEntity(UUID.randomUUID(), UUID.randomUUID(), "ATUALIZADO",
+                "x".repeat(LIMITE_PAYLOAD_BYTES + 1), "carga-legado-lote-0917", AGORA);
+
+        assertThatThrownBy(() -> repository.saveAndFlush(eventoGrandeDemais))
+                .isInstanceOf(DataIntegrityViolationException.class)
+                .hasMessageContaining("ck_outbox_evento_payload_tamanho");
+    }
+
+    @Test
+    void eventoNoLimiteEhAceito() {
+        var eventoNoLimite = new OutboxEventoEntity(UUID.randomUUID(), UUID.randomUUID(), "ATUALIZADO",
+                "x".repeat(LIMITE_PAYLOAD_BYTES), null, AGORA);
+
+        assertThat(repository.saveAndFlush(eventoNoLimite).getId()).isEqualTo(eventoNoLimite.getId());
     }
 
     private OutboxEventoEntity publicadoEm(Instant quando) {

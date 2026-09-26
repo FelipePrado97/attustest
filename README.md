@@ -2,7 +2,13 @@
 
 Aplicação ponta a ponta para uma procuradoria cadastrar e acompanhar processos judiciais: **front-end Angular**, **API Spring Boot** em arquitetura hexagonal, **PostgreSQL** e **Kafka** para a linha do tempo assíncrona de cada processo.
 
-> Teste técnico — Attus Procuradoria Digital. As decisões de projeto, trade-offs e melhorias futuras estão em [DECISIONS.md](DECISIONS.md).
+> Teste técnico — Attus Procuradoria Digital.
+>
+> | Parte | Onde está |
+> |---|---|
+> | **1 · Desenvolvimento** | Este repositório — como executar e avaliar logo abaixo |
+> | **1 · Nota técnica** (decisões, trade-offs, melhorias) | [DECISIONS.md](DECISIONS.md) |
+> | **2 · Análise de incidente** (logs, causa raiz, correção, prevenção) | [docs/INCIDENTE.md](docs/INCIDENTE.md) |
 
 ---
 
@@ -17,6 +23,7 @@ Aplicação ponta a ponta para uma procuradoria cadastrar e acompanhar processos
 - [Testes e qualidade](#testes-e-qualidade)
 - [Desenvolvimento local (opcional)](#desenvolvimento-local-opcional)
 - [Stack](#stack)
+- [Análise de incidente (Parte 2)](docs/INCIDENTE.md)
 
 ---
 
@@ -287,7 +294,7 @@ docker compose --profile test run --rm frontend-test
 
 | | Backend | Front-end |
 |---|---|---|
-| Testes | **187** (JUnit 5) | **170** (Vitest) |
+| Testes | **190** (JUnit 5) | **170** (Vitest) |
 | Cobertura de linhas | 100% | 98,5% |
 | Cobertura de branches | 92,8% | 96,2% |
 | Trava no build | falha abaixo de 90% linhas / 85% branches (JaCoCo) | falha abaixo de 90% linhas / 85% branches |

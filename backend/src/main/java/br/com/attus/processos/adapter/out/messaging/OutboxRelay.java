@@ -6,6 +6,7 @@ import org.apache.kafka.common.errors.RetriableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.NestedExceptionUtils;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,7 +19,6 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -134,7 +134,7 @@ class OutboxRelay {
     }
 
     private static String descrever(Exception e) {
-        var causa = e instanceof ExecutionException && e.getCause() != null ? e.getCause() : e;
-        return causa.getClass().getSimpleName() + ": " + causa.getMessage();
+        var causaRaiz = NestedExceptionUtils.getMostSpecificCause(e);
+        return causaRaiz.getClass().getSimpleName() + ": " + causaRaiz.getMessage();
     }
 }

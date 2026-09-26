@@ -65,6 +65,8 @@ Publicar no Kafka dentro da transação do banco cria dois cenários ruins: o co
 | Evento com falha própria (ex.: mensagem maior que o limite do broker) | Só **o processo afetado** espera, com backoff exponencial por evento (1 s, 2 s, 4 s… até 5 min). Os demais processos seguem — a versão inicial dava `break` e um único evento travava a fila inteira. |
 | Broker indisponível (timeout / erro retentável) | O ciclo é interrompido: todos os envios falhariam. `max.block.ms` curto evita que o `send()` fique 60 s bloqueado esperando metadados. |
 | Crescimento da tabela | `OutboxLimpeza` expurga diariamente os eventos publicados há mais de 7 dias. |
+| Evento impossível de publicar | Constraint limita o evento a 512 KB (metade do limite do Kafka) na própria tabela — barra qualquer escritor, inclusive scripts. Ver [análise de incidente](docs/INCIDENTE.md). |
+| Diagnóstico | `ultimo_erro` e o log registram a causa raiz (ex.: `RecordTooLargeException`), não a exceção que a embrulha; o listener de erros do produtor não grava chave nem conteúdo da mensagem (dados pessoais fora dos logs). |
 | Alertas | Métricas `outbox.eventos.pendentes` e `outbox.eventos.com.falha`. |
 
 ### 4.3 Consumidor, retry e DLT

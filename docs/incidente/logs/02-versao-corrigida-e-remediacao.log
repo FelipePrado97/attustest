@@ -1,0 +1,65 @@
+2026-09-26T14:42:05.524Z  INFO [cid:] 1 --- [processos-api] [           main] b.c.a.processos.ProcessosApiApplication  : Starting ProcessosApiApplication v1.0.0 using Java 21.0.12.1 with PID 1 (/app/app.jar started by app in /app)
+2026-09-26T14:42:05.528Z  INFO [cid:] 1 --- [processos-api] [           main] b.c.a.processos.ProcessosApiApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-09-26T14:42:06.728Z  INFO [cid:] 1 --- [processos-api] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-26T14:42:06.779Z  INFO [cid:] 1 --- [processos-api] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 3 JPA repository interfaces.
+2026-09-26T14:42:07.583Z  INFO [cid:] 1 --- [processos-api] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-09-26T14:42:07.597Z  INFO [cid:] 1 --- [processos-api] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-26T14:42:07.597Z  INFO [cid:] 1 --- [processos-api] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.24]
+2026-09-26T14:42:07.622Z  INFO [cid:] 1 --- [processos-api] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2018 ms
+2026-09-26T14:42:08.036Z  INFO [cid:] 1 --- [processos-api] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-26T14:42:08.203Z  INFO [cid:] 1 --- [processos-api] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5e8f0f98
+2026-09-26T14:42:08.204Z  INFO [cid:] 1 --- [processos-api] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-26T14:42:08.223Z  INFO [cid:] 1 --- [processos-api] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://postgres:5432/attus (PostgreSQL 17.11)
+2026-09-26T14:42:08.290Z  INFO [cid:] 1 --- [processos-api] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.027s)
+2026-09-26T14:42:08.312Z  INFO [cid:] 1 --- [processos-api] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-09-26T14:42:08.315Z  INFO [cid:] 1 --- [processos-api] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-09-26T14:42:08.435Z  INFO [cid:] 1 --- [processos-api] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-09-26T14:42:08.516Z  INFO [cid:] 1 --- [processos-api] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.5.Final
+2026-09-26T14:42:08.948Z  INFO [cid:] 1 --- [processos-api] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-26T14:42:09.046Z  INFO [cid:] 1 --- [processos-api] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://postgres:5432/attus]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.11
+	Default catalog/schema: attus/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-26T14:42:09.931Z  INFO [cid:] 1 --- [processos-api] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-26T14:42:09.969Z  INFO [cid:] 1 --- [processos-api] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-26T14:42:10.049Z  INFO [cid:] 1 --- [processos-api] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-09-26T14:42:11.616Z  INFO [cid:] 1 --- [processos-api] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 4 endpoints beneath base path '/actuator'
+2026-09-26T14:42:12.252Z  INFO [cid:] 1 --- [processos-api] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-09-26T14:42:12.414Z  INFO [cid:] 1 --- [processos-api] [           main] b.c.a.processos.ProcessosApiApplication  : Started ProcessosApiApplication in 7.422 seconds (process running for 8.26)
+2026-09-26T14:42:12.427Z  WARN [cid:] 1 --- [processos-api] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-09-26T14:42:12.428Z  WARN [cid:] 1 --- [processos-api] [           main] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-09-26T14:42:12.694Z ERROR [cid:carga-legado-lote-0917] 1 --- [processos-api] [   scheduling-2] o.s.k.support.LoggingProducerListener    : Exception thrown when sending a message with key='e8daf768-cbda-4e00-bc7c-53fdf60b3bf4' and payload='{"origem":"carga-legado","anexoBase64":"QUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJDQUJD...' to topic processos.eventos:
+org.apache.kafka.common.errors.RecordTooLargeException: The message is 1600268 bytes when serialized which is larger than 1048576, which is the value of the max.request.size configuration.
+2026-09-26T14:42:12.765Z ERROR [cid:carga-legado-lote-0917] 1 --- [processos-api] [   scheduling-2] b.c.a.p.a.out.messaging.OutboxRelay      : Falha ao publicar evento; processo bloqueado ate nova tentativa [eventoId=b131363a-c0c5-482d-889c-a3569f1d1425, processoId=e8daf768-cbda-4e00-bc7c-53fdf60b3bf4, tentativas=76, proximaTentativa=2026-09-26T14:47:12.697665872Z, erro=KafkaException: Send failed]
+2026-09-26T14:42:12.794Z  INFO [cid:inc-cadastro-processo-c] 1 --- [processos-api] [   scheduling-2] b.c.a.p.a.out.messaging.OutboxRelay      : Evento publicado [eventoId=1e163e3a-1b4c-4ca7-82aa-b03f5068a10e, tipo=CADASTRADO, processoId=382a06df-92eb-4071-8420-e00dc507f662, particao=2, offset=0]
+2026-09-26T14:42:12.806Z  INFO [cid:inc-suspensao-processo-b] 1 --- [processos-api] [   scheduling-2] b.c.a.p.a.out.messaging.OutboxRelay      : Evento publicado [eventoId=f95e7336-74af-47be-bcab-d168e1903b91, tipo=STATUS_ALTERADO, processoId=4fd7aa28-9b6b-4de7-a719-4a0cad416108, particao=0, offset=3]
+2026-09-26T14:42:12.960Z  INFO [cid:] 1 --- [processos-api] [omcat-handler-0] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-26T14:42:12.960Z  INFO [cid:] 1 --- [processos-api] [omcat-handler-0] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-26T14:42:12.961Z  INFO [cid:] 1 --- [processos-api] [omcat-handler-0] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-09-26T14:42:18.336Z  INFO [cid:inc-edicao-processo-a] 1 --- [processos-api] [omcat-handler-2] b.c.a.p.a.u.AtualizarProcessoService     : Processo atualizado [processoId=e8daf768-cbda-4e00-bc7c-53fdf60b3bf4, versao=1]
+2026-09-26T14:42:18.396Z  INFO [cid:inc-edicao-processo-a] 1 --- [processos-api] [omcat-handler-2] http.access                              : PUT /api/v1/processos/e8daf768-cbda-4e00-bc7c-53fdf60b3bf4 -> 200 (153 ms)
+2026-09-26T14:42:27.035Z  INFO [cid:b186482f-3ca9-4def-ab77-8f3faf059cc8] 1 --- [processos-api] [omcat-handler-6] http.access                              : GET /api/v1/processos/e8daf768-cbda-4e00-bc7c-53fdf60b3bf4/historico -> 200 (19 ms)
+2026-09-26T14:42:27.163Z  INFO [cid:fb13efea-0aa2-460b-a171-d37ced0b730e] 1 --- [processos-api] [omcat-handler-8] http.access                              : GET /api/v1/processos/4fd7aa28-9b6b-4de7-a719-4a0cad416108/historico -> 200 (4 ms)
+2026-09-26T14:42:27.286Z  INFO [cid:c6dbfdef-56e1-48e1-a09c-2967b2247f41] 1 --- [processos-api] [omcat-handler-9] http.access                              : GET /api/v1/processos/382a06df-92eb-4071-8420-e00dc507f662/historico -> 200 (3 ms)
+2026-09-26T14:42:44.815Z  INFO [cid:] 1 --- [processos-api] [        kafka-1] o.s.k.l.KafkaMessageListenerContainer    : historico-processos: partitions assigned: [processos.eventos-0, processos.eventos-1, processos.eventos-2]
+2026-09-26T14:42:44.834Z  INFO [cid:inc-cadastro-processo-c] 1 --- [processos-api] [        kafka-1] b.c.a.p.a.i.m.HistoricoProcessoConsumer  : Evento recebido [topico=processos.eventos, particao=2, offset=0, chave=382a06df-92eb-4071-8420-e00dc507f662]
+2026-09-26T14:42:44.858Z  INFO [cid:inc-cadastro-processo-c] 1 --- [processos-api] [        kafka-1] b.c.a.p.a.u.RegistrarHistoricoService    : Historico registrado [eventoId=1e163e3a-1b4c-4ca7-82aa-b03f5068a10e, processoId=382a06df-92eb-4071-8420-e00dc507f662, tipo=CADASTRADO]
+2026-09-26T14:42:44.860Z  INFO [cid:inc-suspensao-processo-b] 1 --- [processos-api] [        kafka-1] b.c.a.p.a.i.m.HistoricoProcessoConsumer  : Evento recebido [topico=processos.eventos, particao=0, offset=3, chave=4fd7aa28-9b6b-4de7-a719-4a0cad416108]
+2026-09-26T14:42:44.866Z  INFO [cid:inc-suspensao-processo-b] 1 --- [processos-api] [        kafka-1] b.c.a.p.a.u.RegistrarHistoricoService    : Historico registrado [eventoId=f95e7336-74af-47be-bcab-d168e1903b91, processoId=4fd7aa28-9b6b-4de7-a719-4a0cad416108, tipo=STATUS_ALTERADO]
+2026-09-26T14:42:46.506Z  INFO [cid:030d063b-bad8-4602-8008-5a50048a0b72] 1 --- [processos-api] [mcat-handler-11] http.access                              : GET /api/v1/processos/e8daf768-cbda-4e00-bc7c-53fdf60b3bf4/historico -> 200 (3 ms)
+2026-09-26T14:42:46.607Z  INFO [cid:ce31788d-238e-4532-8919-88d5b7c2e90e] 1 --- [processos-api] [mcat-handler-12] http.access                              : GET /api/v1/processos/4fd7aa28-9b6b-4de7-a719-4a0cad416108/historico -> 200 (3 ms)
+2026-09-26T14:42:46.706Z  INFO [cid:080eff54-bde8-4c38-a412-d4cd4238724e] 1 --- [processos-api] [mcat-handler-14] http.access                              : GET /api/v1/processos/382a06df-92eb-4071-8420-e00dc507f662/historico -> 200 (3 ms)
+2026-09-26T14:42:59.120Z  INFO [cid:inc-edicao-processo-a] 1 --- [processos-api] [        kafka-1] b.c.a.p.a.i.m.HistoricoProcessoConsumer  : Evento recebido [topico=processos.eventos, particao=0, offset=4, chave=e8daf768-cbda-4e00-bc7c-53fdf60b3bf4]
+2026-09-26T14:42:59.126Z  INFO [cid:inc-edicao-processo-a] 1 --- [processos-api] [   scheduling-2] b.c.a.p.a.out.messaging.OutboxRelay      : Evento publicado [eventoId=149df7cf-9e65-45fd-9d3e-e9206e436926, tipo=ATUALIZADO, processoId=e8daf768-cbda-4e00-bc7c-53fdf60b3bf4, particao=0, offset=4]
+2026-09-26T14:42:59.127Z  INFO [cid:inc-edicao-processo-a] 1 --- [processos-api] [        kafka-1] b.c.a.p.a.u.RegistrarHistoricoService    : Historico registrado [eventoId=149df7cf-9e65-45fd-9d3e-e9206e436926, processoId=e8daf768-cbda-4e00-bc7c-53fdf60b3bf4, tipo=ATUALIZADO]
+2026-09-26T14:43:07.125Z  INFO [cid:568ae459-ec96-49c4-b07f-7e1562a84490] 1 --- [processos-api] [mcat-handler-16] http.access                              : GET /api/v1/processos/e8daf768-cbda-4e00-bc7c-53fdf60b3bf4/historico -> 200 (4 ms)
+2026-09-26T14:43:07.221Z  INFO [cid:feea21bc-aa87-4658-9796-0462360397a8] 1 --- [processos-api] [mcat-handler-17] http.access                              : GET /api/v1/processos/4fd7aa28-9b6b-4de7-a719-4a0cad416108/historico -> 200 (4 ms)
+2026-09-26T14:43:07.311Z  INFO [cid:01802e9a-1c22-4151-8d94-e3a24ef3f09a] 1 --- [processos-api] [mcat-handler-19] http.access                              : GET /api/v1/processos/382a06df-92eb-4071-8420-e00dc507f662/historico -> 200 (3 ms)

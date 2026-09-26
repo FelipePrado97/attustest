@@ -1,0 +1,51 @@
+groups:
+  - name: processos-outbox
+    rules:
+      - alert: OutboxEventoComFalha
+        expr: outbox_eventos_com_falha > 0
+        for: 5m
+        labels:
+          severidade: alta
+        annotations:
+          resumo: "Evento do outbox falhando há mais de 5 minutos"
+          descricao: >-
+            {{ $value }} evento(s) pendente(s) já falharam ao publicar. Os eventos seguintes do mesmo processo
+            ficam retidos para preservar a ordem. Seguir o runbook em docs/INCIDENTE.md (seção Remediação).
+
+      - alert: OutboxNaoEsvazia
+        expr: min_over_time(outbox_eventos_pendentes[10m]) > 0
+        labels:
+          severidade: alta
+        annotations:
+          resumo: "Outbox não esvazia há 10 minutos"
+          descricao: >-
+            Há eventos pendentes continuamente há 10 minutos: relay parado, broker indisponível ou evento
+            retido. Em operação normal o outbox zera a cada segundo.
+
+      - alert: OutboxAcumulando
+        expr: outbox_eventos_pendentes > 100
+        for: 2m
+        labels:
+          severidade: critica
+        annotations:
+          resumo: "Mais de 100 eventos acumulados no outbox"
+          descricao: "A linha do tempo dos processos está atrasada para os usuários."
+
+  - name: processos-consumo
+    rules:
+      - alert: HistoricoComAtraso
+        expr: sum by (consumergroup) (kafka_consumergroup_lag{consumergroup="historico-processos"}) > 100
+        for: 5m
+        labels:
+          severidade: alta
+        annotations:
+          resumo: "Consumidor da linha do tempo atrasado"
+          descricao: "Requer o kafka-exporter. Lag acima de 100 mensagens por mais de 5 minutos."
+
+      - alert: MensagensNoDlt
+        expr: increase(kafka_topic_partition_current_offset{topic="processos.eventos.DLT"}[15m]) > 0
+        labels:
+          severidade: media
+        annotations:
+          resumo: "Mensagens enviadas ao Dead Letter Topic"
+          descricao: "Requer o kafka-exporter. Mensagens que o consumidor não conseguiu processar aguardam análise."

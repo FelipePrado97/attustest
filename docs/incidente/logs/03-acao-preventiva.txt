@@ -1,0 +1,12 @@
+$ docker exec attus-postgres psql -U attus -d attus -c "INSERT INTO outbox_evento (id, agregado_id, tipo, payload, correlation_id, criado_em) VALUES (gen_random_uuid(), 'e8daf768-cbda-4e00-bc7c-53fdf60b3bf4', 'ATUALIZADO', '{\"origem\":\"carga-legado\",\"anexoBase64\":\"' || repeat('QUJD', 400000) || '\"}', 'carga-legado-lote-0917', now())"
+
+2026-09-26T14:46:13.104Z  INFO ... o.f.core.internal.command.DbMigrate : Migrating schema "public" to version "3 - limita tamanho do evento no outbox"
+2026-09-26T14:46:13.146Z  INFO ... o.f.core.internal.command.DbMigrate : Successfully applied 1 migration to schema "public", now at version v3
+
+[14:46:18Z]
+ERROR:  new row for relation "outbox_evento" violates check constraint "ck_outbox_evento_payload_tamanho"
+DETAIL:  Failing row contains (8, bc642728-acc3-4d62-a04a-d94d60a3a0df, e8daf768-cbda-4e00-bc7c-53fdf60b3bf4, ATUALIZADO, {"origem":"carga-legado","anexoBase64":"QUJDQUJDQUJDQUJDQUJDQUJD..., carga-legado-lote-0917, 2026-09-26 14:46:18.329011+00, null, 0, null, null).
+
+$ curl -s http://localhost:8080/actuator/prometheus | grep ^outbox_eventos
+outbox_eventos_com_falha 0.0
+outbox_eventos_pendentes 0.0

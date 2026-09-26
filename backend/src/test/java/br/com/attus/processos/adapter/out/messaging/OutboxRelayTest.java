@@ -145,6 +145,30 @@ class OutboxRelayTest {
     }
 
     @Test
+    void incidenteEventoGrandeDemais_registraACausaRaizEBloqueiaSoOProcessoAfetado() {
+        var processoComEventoGrande = UUID.randomUUID();
+        var eventoGrande = evento(processoComEventoGrande, "carga-legado-lote-0917");
+        var edicaoPosterior = evento(processoComEventoGrande, "inc-edicao-processo-a");
+        var cadastroDeOutroProcesso = evento(UUID.randomUUID(), "inc-cadastro-processo-c");
+        pendentes(eventoGrande, edicaoPosterior, cadastroDeOutroProcesso);
+        when(kafkaTemplate.send(any(ProducerRecord.class))).thenAnswer(inv -> {
+            ProducerRecord<String, String> record = inv.getArgument(0);
+            if (record.key().equals(processoComEventoGrande.toString())) {
+                throw new KafkaException("Send failed", new RecordTooLargeException(
+                        "The message is 1600268 bytes when serialized which is larger than 1048576"));
+            }
+            return sucesso(record);
+        });
+
+        relay.publicarPendentes();
+
+        assertThat(eventoGrande.getUltimoErro()).startsWith("RecordTooLargeException: The message is 1600268 bytes");
+        assertThat(eventoGrande.getProximaTentativaEm()).isEqualTo(AGORA.plusSeconds(1));
+        assertThat(edicaoPosterior.getPublicadoEm()).as("mantém a ordem do processo afetado").isNull();
+        assertThat(cadastroDeOutroProcesso.getPublicadoEm()).as("outros processos não são afetados").isEqualTo(AGORA);
+    }
+
+    @Test
     void falhaSincronaAoEnviarTambemEhTratada() {
         var a1 = evento(UUID.randomUUID(), null);
         pendentes(a1);

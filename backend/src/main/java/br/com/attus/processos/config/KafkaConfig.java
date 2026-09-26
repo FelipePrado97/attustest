@@ -14,6 +14,8 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.support.LoggingProducerListener;
+import org.springframework.kafka.support.ProducerListener;
 import org.springframework.util.backoff.ExponentialBackOff;
 import tools.jackson.core.JacksonException;
 
@@ -34,6 +36,13 @@ public class KafkaConfig {
     NewTopic topicoEventosProcessoDlt(@Value("${app.kafka.topico-eventos}") String topico,
                                       @Value("${app.kafka.particoes:3}") int particoes) {
         return TopicBuilder.name(topico + SUFIXO_DLT).partitions(particoes).replicas(1).build();
+    }
+
+    @Bean
+    ProducerListener<Object, Object> kafkaProducerListenerSemDadosPessoaisNoLog() {
+        var listener = new LoggingProducerListener<Object, Object>();
+        listener.setIncludeContents(false);
+        return listener;
     }
 
     @Bean
